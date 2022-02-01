@@ -1,6 +1,7 @@
 
 const express = require('express');
-const cors = require( 'cors' )
+const cors = require( 'cors' );
+const { dbConection } = require('../database/config');
 
 //la funcion express() crea una aplicación de express
 class Server {
@@ -9,13 +10,21 @@ class Server {
         this.app = express();
         this.port = process.env.PORT;
         this.userPath = '/api/user'
-        //Middlewares (funciones que se ejecutan siempre que se levanta el servidor)
 
+
+        // Conectar a base de datos
+        this.conectarDB();
+        //Middlewares (funciones que se ejecutan siempre que se levanta el servidor)
         this.middleWares();
 
         //se agrega el metodo routes en el constructor con la finalidad que luego de disparar el constructor se creen las rutas
         this.routes();
     }
+
+    async conectarDB(){
+        await dbConection();
+    }
+
 
     middleWares(){
         //el uso de la funcion use() le indica a express que se está creando un middleware
