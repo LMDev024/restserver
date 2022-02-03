@@ -1,10 +1,11 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { esRoleValido, emailExiste, existeUsuarioPorId } = require('../helpers/db-validators');
-const {validarCampos} = require('../middlewares/validar-campos');
 
+const {validarCampos,validarJWT,tieneRole} = require('../middlewares');
+const { esRoleValido, emailExiste, existeUsuarioPorId } = require('../helpers/db-validators');
 const { userGet, userPost, userPut, userPatch, userDelete } = require('../controllers/user');
+
 
 const router = Router();
 
@@ -32,6 +33,9 @@ const router = Router();
     router.patch('/', userPatch );
 
     router.delete('/:id',[
+        validarJWT,
+        tieneRole('ADMIN_ROLE','VENTAS_ROLE' ),
+        //este middlewares fuerza a que si o si solo debe ser ADMIN_ROLE para borrar usuarios esAdminRole,
         check('id','No es un id valido').isMongoId(),
         check('id').custom(existeUsuarioPorId),
         validarCampos
