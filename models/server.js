@@ -9,8 +9,14 @@ class Server {
         //cada que se hace una instancia de la clase Server se crea una aplicación de express
         this.app = express();
         this.port = process.env.PORT;
-        this.userPath = '/api/user'
-        this.authPath = '/api/auth';
+        this.paths = {
+            auth:'/api/auth',
+            buscar:'/api/buscar',
+            categorias:'/api/categorias',
+            productos: '/api/productos',
+            user:'/api/user'
+        }
+
 
 
         // Conectar a base de datos
@@ -44,8 +50,11 @@ class Server {
     routes(){
 
 //midleware condicional
-        this.app.use(this.authPath, require('../routes/auth'));
-        this.app.use(this.userPath, require('../routes/user'));
+        this.app.use(this.paths.auth, require('../routes/auth'));
+        this.app.use(this.paths.categorias, require('../routes/categorias'));
+        this.app.use(this.paths.buscar, require('../routes/buscar'));
+        this.app.use(this.paths.productos, require('../routes/productos'));
+        this.app.use(this.paths.user, require('../routes/user'));
 
     }
 
